@@ -79,7 +79,7 @@
     <Compile Include="Components\JointComponent.cs" />
     <Compile Include="Components\LeftRightComponent.cs" />
     <Compile Include="Components\PhysicsComponent.cs" />
-    <Compile Include="Components\Queen.cs" />
+    <Compile Include="Components\Eleve.cs" />
     <Compile Include="Components\RotatingComponent.cs" />
     <Compile Include="Components\Selectable.cs" />
     <Compile Include="Components\UpDownComponent.cs" />

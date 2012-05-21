@@ -54,7 +54,7 @@ namespace _2dgame
             maxWorld.X = 1000;
             maxWorld.Y = 1000;
 
-            m_Physics = new Physics(-9.8f * Vector2.UnitY, minWorld, maxWorld)
+            m_Physics = new Physics(Vector2.Zero, minWorld, maxWorld)
                 {
                     DebugView = false
                 };
@@ -99,75 +99,17 @@ namespace _2dgame
             camera.Transform = Matrix.CreateWorld(new Vector3(0, -1, 1), -Vector3.UnitZ, Vector3.UnitY);
 
 
-            Entity queen = Owner.CreateEntity();
+            //create carré rouge
+            Entity eleve = Owner.CreateEntity();
+            camera.AddComponent(new FollowEntity(eleve, 0.5f * Vector3.UnitY, false, true));
+            Vector2 bodySize = IMAGE_SCALE * new Vector2(50, 50);
+            m_EZBakeOven.MakeSprite(eleve, bodySize, "Eleve", 4, 10);
+            eleve.AddComponent(m_Physics.CreateRectangle(0.5f * bodySize, 1.0f, FarseerPhysics.Dynamics.BodyType.Dynamic));
+            eleve.AddComponent(new Eleve(2, .1f));
 
-            //make camera follow queen
-            camera.AddComponent(new FollowEntity(queen, 0.5f * Vector3.UnitY, false, true));
 
             Vector3 background_translation = -0.5f * Vector3.UnitY;
             CreateBackground(camera, background_translation);
-
-            //create fanboys
-            CreateBeefeater(new Vector3(4, -2, 0));
-            CreateBeefeater(new Vector3(3, -2, 0));
-            CreateBeefeater(new Vector3(2, -2, 0));
-            CreateBeefeater(new Vector3(-2, -2, 0));
-            CreateBeefeater(new Vector3(-3, -2, 0));
-            CreateBeefeater(new Vector3(-4, -2, 0));
-
-            //create body
-            queen.Transform = Matrix.CreateTranslation(-1.5f * Vector3.UnitY);
-            Vector2 bodySize = IMAGE_SCALE * new Vector2(300, 198);
-            
-            queen.AddComponent(m_Physics.CreateRectangle(0.5f * bodySize, 1.0f, FarseerPhysics.Dynamics.BodyType.Dynamic));
-            m_Physics.ConstrainAngle(0, 0.01f, 0.4f, queen); //make body stay upright
-
-            queen.AddComponent(new Selectable(new BoundingBox(new Vector3(-0.5f * bodySize, -2), new Vector3(0.5f * bodySize, 2))));
-            queen.AddComponent(new FollowFinger());
-            queen.AddComponent(new Queen(2, 10));
-            m_EZBakeOven.MakeSprite(queen, bodySize, "body");
-
-            //create neck
-            Entity neck = queen.CreateChild();
-            neck.Transform = Matrix.CreateTranslation(1.5f * Vector3.UnitY);
-
-            //create head
-            Entity head = neck.CreateChild();
-            head.AddComponent(new LeftRightComponent(-30, 30, 0.75f, -0.5f * 1.7f * Vector3.UnitY));
-            head.AddComponent(m_Physics.CreateCapsule(0.25f, 0.5f, 1.0f, FarseerPhysics.Dynamics.BodyType.Static));
-            head.AddComponent(new SoundOnCollision());
-            head.AddComponent(new Handle<SoundEffect>("laugh"));
-            m_EZBakeOven.MakeSprite(head, IMAGE_SCALE * new Vector2(152, 175), "head");
-
-            //create mouth hinge
-            Entity mouthHinge = head.CreateChild();
-            mouthHinge.Transform = Matrix.CreateTranslation(-0.85f * Vector3.UnitY);
-
-            //create mouth
-            Entity mouth = mouthHinge.CreateChild();
-            mouth.AddComponent(new UpDownComponent(-0.2f, 0, 0.3f, Vector3.UnitY));
-            m_EZBakeOven.MakeSprite(mouth, IMAGE_SCALE * new Vector2(79, 30), "mouth");
-
-            //create flowers
-            foreach(int i in Enumerable.Range(1, 10))
-            {
-                Entity flowers = Owner.CreateEntity();
-                flowers.Transform = Matrix.CreateTranslation((2 + i * 1) * Vector3.UnitY + ((float)m_Rand.NextDouble() - 0.5f) * Vector3.UnitX);
-                flowers.AddComponent(m_Physics.CreateTriangle(0.25f, 0.5f, 1, FarseerPhysics.Dynamics.BodyType.Dynamic));
-
-                m_EZBakeOven.MakeSprite(flowers, IMAGE_SCALE * new Vector2(100, 100), "flowers");
-            }
-
-            //create cake
-            Entity cake = Owner.CreateEntity();
-            cake.Transform = Matrix.CreateTranslation(-2 * Vector3.UnitY);
-            m_EZBakeOven.MakeSprite(cake, IMAGE_SCALE * new Vector2(200, 200), "cake");
-
-            //create flame
-            Entity flame = cake.CreateChild();
-            flame.Transform = Matrix.CreateTranslation(Vector3.UnitY);
-            m_EZBakeOven.MakeSprite(flame, IMAGE_SCALE * new Vector2(100, 100), "flame", 4, 10);
-            flame.GetComponent<RenderSettings>().BlendState = BlendState.Additive;
 
             //add grass in front of everything
             Entity grass = Owner.CreateEntity();
