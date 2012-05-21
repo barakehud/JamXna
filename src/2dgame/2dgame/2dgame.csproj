@@ -73,6 +73,7 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\BulletComponent.cs" />
     <Compile Include="Components\CollisionSound.cs" />
     <Compile Include="Components\FollowEntity.cs" />
     <Compile Include="Components\FollowFinger.cs" />

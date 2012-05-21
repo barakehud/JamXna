@@ -71,6 +71,8 @@ namespace _2dgame
             base.OnOwnerSet();
         }
 
+        
+
         void OnCreated(CreatedMessage msg)
         {
             msg.Manager.PreferredBackBufferWidth = (int)DESIRED_SCREEN_SIZE.X;
@@ -105,12 +107,20 @@ namespace _2dgame
             Vector2 bodySize = IMAGE_SCALE * new Vector2(50, 50);
             m_EZBakeOven.MakeSprite(eleve, bodySize, "Eleve", 4, 10);
             eleve.AddComponent(m_Physics.CreateRectangle(0.5f * bodySize, 1.0f, FarseerPhysics.Dynamics.BodyType.Dynamic));
+            m_Physics.ConstrainAngle(0, float.MaxValue, 0, eleve);
             eleve.AddComponent(new Eleve(2, .1f));
 
+            
+            //create policier
+           Entity policier = Owner.CreateEntity();
+           policier.Transform = Matrix.CreateTranslation(Vector3.UnitY);
+            m_EZBakeOven.MakeSprite(policier, IMAGE_SCALE * new Vector2(122, 48), "PoliceDos", 4, 10);
+            //policier.GetComponent<RenderSettings>().BlendState = BlendState.Additive;
 
             Vector3 background_translation = -0.5f * Vector3.UnitY;
             CreateBackground(camera, background_translation);
 
+       
             //add grass in front of everything
             Entity grass = Owner.CreateEntity();
             grass.Transform = Matrix.CreateTranslation(background_translation);
@@ -195,5 +205,7 @@ namespace _2dgame
             beef_body.AddComponent(new LeftRightComponent(-10, 10, -1, beefeater_distance * Vector3.UnitY));
             m_EZBakeOven.MakeSprite(beef_body, IMAGE_SCALE * new Vector2(180, 351), "beefeater_body");
         }
+
+        
     }
 }

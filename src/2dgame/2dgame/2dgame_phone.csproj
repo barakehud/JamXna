@@ -79,6 +79,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\BulletComponent.cs" />
     <Compile Include="Components\CollisionSound.cs" />
     <Compile Include="Components\Eleve.cs" />
     <Compile Include="Components\FollowEntity.cs" />

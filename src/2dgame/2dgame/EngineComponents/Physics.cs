@@ -26,6 +26,9 @@ namespace _2dgame.EngineComponents
         RawRenderer m_Renderer;
         Camera m_Camera;
 
+        Vector2 m_min;
+        Vector2 m_max;
+
         public bool DebugView
         {
             get { return m_View.Enabled; }
@@ -56,17 +59,8 @@ namespace _2dgame.EngineComponents
             m_View.DefaultShapeColor = Color.Green;
             m_View.SleepingShapeColor = Color.LightGray;
 
-            //floor
-            BodyFactory.CreateEdge(m_World, new Vector2(min.X, min.Y), new Vector2(max.X, min.Y));
-
-            //right side
-            BodyFactory.CreateEdge(m_World, new Vector2(max.X, min.Y), new Vector2(max.X, max.Y));
-
-            //left side
-            BodyFactory.CreateEdge(m_World, new Vector2(min.X, min.Y), new Vector2(min.X, max.Y));
-
-            //top
-            BodyFactory.CreateEdge(m_World, new Vector2(min.X, max.Y), new Vector2(max.X, max.Y)); 
+            m_min = min;
+            m_max = max;
         }
 
         public Physics(Vector2 gravity)
@@ -80,6 +74,24 @@ namespace _2dgame.EngineComponents
                 {
                     m_View.LoadContent(item.Device, item.Content);
                 });
+
+            Entity borderent = Owner.CreateEntity();
+
+            //floor
+            Body body = BodyFactory.CreateEdge(m_World, new Vector2(m_min.X, m_min.Y), new Vector2(m_max.X, m_min.Y));
+            borderent.CreateChild().AddComponent(new PhysicsComponent(body));
+
+            //right side
+            body = BodyFactory.CreateEdge(m_World, new Vector2(m_max.X, m_min.Y), new Vector2(m_max.X, m_max.Y));
+            borderent.CreateChild().AddComponent(new PhysicsComponent(body));
+
+            //left side
+            body = BodyFactory.CreateEdge(m_World, new Vector2(m_min.X, m_min.Y), new Vector2(m_min.X, m_max.Y));
+            borderent.CreateChild().AddComponent(new PhysicsComponent(body));
+
+            //top
+            body = BodyFactory.CreateEdge(m_World, new Vector2(m_min.X, m_max.Y), new Vector2(m_max.X, m_max.Y));
+            borderent.CreateChild().AddComponent(new PhysicsComponent(body));
 
             base.OnOwnerSet();
         }
